@@ -4,6 +4,11 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { Header } from './Header';
 import { Footer } from './Footer';
 
+// While developing locally, this points at your local backend.
+// Once you deploy the backend (see contact-backend/README.md), change this
+// to your live backend URL, e.g. 'https://your-app.onrender.com/api/contact'.
+const CONTACT_API_URL = 'http://localhost:5000/api/contact';
+
 export const ContactUs = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -16,6 +21,7 @@ export const ContactUs = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const [submitError, setSubmitError] = useState(false);
 
   useEffect(() => {
     if (map.current || !mapContainer.current) return;
@@ -87,12 +93,32 @@ export const ContactUs = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitMessage('');
+    setSubmitError(false);
 
-    setTimeout(() => {
-      setSubmitMessage('Thank you for your message! We will get back to you soon.');
-      setFormData({ name: '', email: '', comment: '' });
+    try {
+      const response = await fetch(CONTACT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSubmitMessage('Thank you for your message! We will get back to you soon.');
+        setSubmitError(false);
+        setFormData({ name: '', email: '', comment: '' });
+      } else {
+        setSubmitMessage(data.error || 'Something went wrong. Please try again.');
+        setSubmitError(true);
+      }
+    } catch (error) {
+      console.error('Submit error:', error);
+      setSubmitMessage('Unable to send your message right now. Please check your connection and try again.');
+      setSubmitError(true);
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -195,9 +221,19 @@ export const ContactUs = () => {
                   </div>
 
                   {submitMessage && (
-                    <div className="bg-green-50 border-2 border-green-200 text-eabono-green px-4 py-3 rounded-xl font-semibold flex items-center gap-3">
+                    <div
+                      className={`border-2 px-4 py-3 rounded-xl font-semibold flex items-center gap-3 ${
+                        submitError
+                          ? 'bg-red-50 border-red-200 text-red-600'
+                          : 'bg-green-50 border-green-200 text-eabono-green'
+                      }`}
+                    >
                       <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        {submitError ? (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        ) : (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        )}
                       </svg>
                       <span>{submitMessage}</span>
                     </div>
