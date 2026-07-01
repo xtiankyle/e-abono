@@ -24,12 +24,12 @@ export const CropResourceCard = ({
 }: CropResourceCardProps) => {
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 group">
-      <div className="grid md:grid-cols-5 gap-0">
-        <div className="md:col-span-2 relative overflow-hidden">
+      <div className="grid md:grid-cols-5 gap-0 md:h-[420px]">
+        <div className="md:col-span-2 relative overflow-hidden h-[280px] md:h-full">
           <img
             src={imageUrl}
             alt={`${location} crop field`}
-            className="w-full h-full object-cover min-h-[450px] group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute top-4 left-4">
             <span className="bg-eabono-green text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center gap-2">
@@ -39,7 +39,7 @@ export const CropResourceCard = ({
           </div>
         </div>
 
-        <div className="md:col-span-3 p-8 lg:p-10 flex flex-col">
+        <div className="md:col-span-3 p-8 lg:p-10 flex flex-col overflow-y-auto">
           <div className="mb-6">
             <h3 className="text-3xl lg:text-4xl font-bold text-eabono-green mb-2">{location}</h3>
             <div className="w-20 h-1 bg-eabono-gold rounded-full"></div>

@@ -1,5 +1,11 @@
 import React from 'react';
 import { CropPage } from './CropPage';
+import { PlantingStatsTable } from './PlantingStatsTable';
+import {
+  atokPlantingStats,
+  laTrinidadPlantingStats,
+  mankayanPlantingStats,
+} from '../data/potatoPlantingStats';
 
 export const PotatoPage = () => {
   const locationResources = [
@@ -13,6 +19,7 @@ export const PotatoPage = () => {
       fertilization: '120 kg N/ha, 60 kg P/ha, 100 kg K/ha',
       expectedYield: '25-30 tons/hectare',
       imageUrl: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=800&q=80',
+      statsTable: <PlantingStatsTable stats={laTrinidadPlantingStats} />,
     },
     {
       location: 'Atok',
@@ -24,17 +31,19 @@ export const PotatoPage = () => {
       fertilization: '100 kg N/ha, 50 kg P/ha, 80 kg K/ha',
       expectedYield: '20-25 tons/hectare',
       imageUrl: 'https://images.unsplash.com/photo-1589927986089-35812388d1f4?w=800&q=80',
+      statsTable: <PlantingStatsTable stats={atokPlantingStats} />,
     },
     {
-      location: 'Buguias',
+      location: 'Mankayan',
       terrain: 'Terrace Terrain',
       description:
-        'The Buguias terrace farming project demonstrates innovative irrigation and fertilization strategies for potato cultivation. This site serves as a model for sustainable agriculture practices in terraced landscapes.',
+        'The Mankayan terrace farming project demonstrates innovative irrigation and fertilization strategies for potato cultivation. This site serves as a model for sustainable agriculture practices in terraced landscapes.',
       timeDate: 'April 2024 - July 2024',
       growthStage: 'Early Development Stage',
       fertilization: '110 kg N/ha, 55 kg P/ha, 90 kg K/ha',
       expectedYield: '22-28 tons/hectare',
       imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80',
+      statsTable: <PlantingStatsTable stats={mankayanPlantingStats} />,
     },
   ];
 

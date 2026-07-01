@@ -14,6 +14,7 @@ interface LocationResource {
   fertilization: string;
   expectedYield: string;
   imageUrl: string;
+  statsTable?: React.ReactNode; // renders below the card — Potato or Cabbage table, etc.
 }
 
 interface SimplifiedResource {
@@ -65,7 +66,10 @@ export const CropPage = ({
 
             <div className="space-y-12">
               {locationResources.map((resource, index) => (
-                <CropResourceCard key={index} {...resource} />
+                <div key={index} className="space-y-6">
+                  <CropResourceCard {...resource} />
+                  {resource.statsTable}
+                </div>
               ))}
             </div>
 
