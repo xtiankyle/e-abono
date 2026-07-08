@@ -24,8 +24,8 @@ export const SimplifiedResourceCard = ({
 
       <p className="text-gray-700 mb-8 leading-relaxed flex-grow">{description}</p>
 
-      <div className="flex justify-end mt-auto">
-        <button className="bg-eabono-green-light text-white px-8 py-3 rounded-xl font-bold hover:bg-eabono-green transition-all duration-300 flex items-center gap-3 shadow-md hover:shadow-lg hover:scale-105">
+      <div className="mt-auto">
+        <button className="w-full bg-eabono-green-light text-white px-8 py-3 rounded-xl font-bold hover:bg-eabono-green transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg">
           <Download size={20} />
           Download Guide
         </button>

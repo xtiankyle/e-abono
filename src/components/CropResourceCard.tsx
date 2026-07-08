@@ -81,8 +81,8 @@ export const CropResourceCard = ({
             </div>
           </div>
 
-          <div className="flex justify-end mt-auto">
-            <button className="bg-eabono-gold text-white px-8 py-3.5 rounded-xl font-bold hover:bg-eabono-gold/90 transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl hover:scale-105">
+          <div className="mt-auto">
+            <button className="w-full bg-eabono-gold text-white px-8 py-3.5 rounded-xl font-bold hover:bg-eabono-gold/90 transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl">
               <Download size={20} />
               Download Report
             </button>
