@@ -1,4 +1,6 @@
 require('dotenv').config();
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
@@ -92,6 +94,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Load the logo once at startup and cache it as a base64 data URI
+// so it can be embedded directly in the HTML (no separate MIME attachment,
+// which is what was causing Gmail to show it as a downloadable file chip)
+const logoBase64 = fs.readFileSync(path.join(__dirname, 'LOGO.png')).toString('base64');
+const logoDataUri = `data:image/png;base64,${logoBase64}`;
+
 function buildEmailHtml({ name, email, comment }) {
   const safeName    = escapeHtml(name);
   const safeEmail   = escapeHtml(email);
@@ -132,7 +140,8 @@ function buildEmailHtml({ name, email, comment }) {
                   <tr>
                     <td align="center">
                       <h1 style="margin:16px 0 0; color:#ffffff; font-size:25px; font-weight:700; letter-spacing:0.2px;">E-Abono</h1>
-                      <p style="margin:5px 0 0; color:rgba(255,255,255,0.78); font-size:12px; letter-spacing:0.8px; text-transform:uppercase;">Precision agriculture &middot; Benguet</p>
+                      <img src="${logoDataUri}" alt="E-Abono Logo" width="64" height="64" style="display:block; margin:12px auto 0; border:0;" />
+                      <p style="margin:12px 0 0; color:rgba(255,255,255,0.78); font-size:12px; letter-spacing:0.8px; text-transform:uppercase;">Precision agriculture &middot; Benguet</p>
                     </td>
                   </tr>
                 </table>
@@ -235,18 +244,18 @@ app.post('/api/contact', async (req, res) => {
     return res.status(400).json({ error: `Message must be ${LIMITS.comment} characters or fewer.` });
   }
   if (!isValidEmail(email)) {
-    return res.status(400).json({ error: 'Please enter a valid email address.' });
+    return res.status(400).json({ error: `Please enter a valid email address.` });
   }
   if (containsLink(name) || containsLink(comment)) {
-    return res.status(400).json({ error: 'Links and website addresses are not allowed in messages.' });
+    return res.status(400).json({ error: `Links and website addresses are not allowed in messages.` });
   }
   if (containsSpam(name) || containsSpam(comment)) {
-    return res.status(400).json({ error: 'Your message was flagged as spam. Please revise and try again.' });
+    return res.status(400).json({ error: `Your message was flagged as spam. Please revise and try again.` });
   }
 
   try {
     await transporter.sendMail({
-      from: `"E-Abono Contact Form" <${process.env.SMTP_USER}>`,
+      from: `E-Abono Contact Form <${process.env.SMTP_USER}>`,
       to: process.env.RECEIVING_EMAIL,
       replyTo: email,
       subject: `New message from ${name} via E-Abono Contact Form`,
