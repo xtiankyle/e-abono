@@ -7,7 +7,7 @@ import { Footer } from './Footer';
 // While developing locally, this points at your local backend.
 // Once you deploy the backend (see contact-backend/README.md), change this
 // to your live backend URL, e.g. 'https://your-app.onrender.com/api/contact'.
-const CONTACT_API_URL = 'http://localhost:5000/api/contact';
+const CONTACT_API_URL = '/api/contact';
 
 export const ContactUs = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
