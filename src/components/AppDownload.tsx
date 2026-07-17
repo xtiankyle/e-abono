@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Download } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
+import qrCode from '../assets/qr-code.png';
 
 export const AppDownload = () => {
   const ref = useRef(null);
@@ -26,131 +27,7 @@ export const AppDownload = () => {
                   </div>
 
                   <div className="w-48 h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 bg-white border-2 sm:border-3 md:border-4 border-gray-200 rounded-lg flex items-center justify-center p-3 md:p-4">
-                    <svg viewBox="0 0 100 100" className="w-full h-full">
-                      <rect x="0" y="0" width="20" height="20" fill="black"/>
-                      <rect x="24" y="0" width="4" height="4" fill="black"/>
-                      <rect x="32" y="0" width="8" height="4" fill="black"/>
-                      <rect x="44" y="0" width="12" height="4" fill="black"/>
-                      <rect x="60" y="0" width="4" height="4" fill="black"/>
-                      <rect x="80" y="0" width="20" height="20" fill="black"/>
-
-                      <rect x="4" y="4" width="12" height="12" fill="white"/>
-                      <rect x="84" y="4" width="12" height="12" fill="white"/>
-                      <rect x="8" y="8" width="4" height="4" fill="black"/>
-                      <rect x="88" y="8" width="4" height="4" fill="black"/>
-
-                      <rect x="0" y="24" width="4" height="4" fill="black"/>
-                      <rect x="8" y="24" width="8" height="4" fill="black"/>
-                      <rect x="24" y="24" width="12" height="8" fill="black"/>
-                      <rect x="44" y="24" width="4" height="8" fill="black"/>
-                      <rect x="52" y="24" width="8" height="4" fill="black"/>
-                      <rect x="68" y="24" width="8" height="8" fill="black"/>
-                      <rect x="80" y="24" width="4" height="4" fill="black"/>
-                      <rect x="92" y="24" width="8" height="4" fill="black"/>
-
-                      <rect x="24" y="32" width="4" height="8" fill="black"/>
-                      <rect x="32" y="32" width="8" height="4" fill="black"/>
-                      <rect x="44" y="32" width="12" height="4" fill="black"/>
-                      <rect x="60" y="32" width="4" height="8" fill="black"/>
-                      <rect x="68" y="32" width="8" height="4" fill="black"/>
-                      <rect x="80" y="32" width="4" height="4" fill="black"/>
-                      <rect x="92" y="32" width="8" height="8" fill="black"/>
-
-                      <rect x="0" y="40" width="16" height="4" fill="black"/>
-                      <rect x="24" y="40" width="8" height="4" fill="black"/>
-                      <rect x="36" y="40" width="4" height="4" fill="black"/>
-                      <rect x="44" y="40" width="8" height="4" fill="black"/>
-                      <rect x="60" y="40" width="12" height="4" fill="black"/>
-                      <rect x="80" y="40" width="4" height="4" fill="black"/>
-                      <rect x="88" y="40" width="12" height="4" fill="black"/>
-
-                      <rect x="0" y="44" width="4" height="12" fill="black"/>
-                      <rect x="8" y="44" width="12" height="4" fill="black"/>
-                      <rect x="24" y="44" width="8" height="8" fill="black"/>
-                      <rect x="36" y="44" width="4" height="4" fill="black"/>
-                      <rect x="48" y="44" width="8" height="8" fill="black"/>
-                      <rect x="60" y="44" width="4" height="4" fill="black"/>
-                      <rect x="68" y="44" width="12" height="4" fill="black"/>
-                      <rect x="84" y="44" width="8" height="8" fill="black"/>
-                      <rect x="96" y="44" width="4" height="12" fill="black"/>
-
-                      <rect x="24" y="52" width="4" height="4" fill="black"/>
-                      <rect x="32" y="52" width="4" height="4" fill="black"/>
-                      <rect x="40" y="52" width="12" height="4" fill="black"/>
-                      <rect x="64" y="52" width="12" height="4" fill="black"/>
-                      <rect x="80" y="52" width="4" height="4" fill="black"/>
-
-                      <rect x="0" y="56" width="8" height="4" fill="black"/>
-                      <rect x="12" y="56" width="8" height="4" fill="black"/>
-                      <rect x="24" y="56" width="4" height="4" fill="black"/>
-                      <rect x="32" y="56" width="12" height="4" fill="black"/>
-                      <rect x="48" y="56" width="8" height="4" fill="black"/>
-                      <rect x="60" y="56" width="4" height="4" fill="black"/>
-                      <rect x="68" y="56" width="8" height="4" fill="black"/>
-                      <rect x="80" y="56" width="12" height="4" fill="black"/>
-                      <rect x="96" y="56" width="4" height="4" fill="black"/>
-
-                      <rect x="32" y="60" width="8" height="8" fill="black"/>
-                      <rect x="44" y="60" width="4" height="4" fill="black"/>
-                      <rect x="52" y="60" width="8" height="8" fill="black"/>
-                      <rect x="64" y="60" width="4" height="4" fill="black"/>
-                      <rect x="72" y="60" width="8" height="8" fill="black"/>
-                      <rect x="84" y="60" width="12" height="4" fill="black"/>
-
-                      <rect x="24" y="64" width="4" height="12" fill="black"/>
-                      <rect x="44" y="64" width="4" height="4" fill="black"/>
-                      <rect x="64" y="64" width="4" height="4" fill="black"/>
-
-                      <rect x="0" y="68" width="20" height="4" fill="black"/>
-                      <rect x="32" y="68" width="8" height="4" fill="black"/>
-                      <rect x="44" y="68" width="4" height="8" fill="black"/>
-                      <rect x="52" y="68" width="8" height="4" fill="black"/>
-                      <rect x="64" y="68" width="12" height="4" fill="black"/>
-                      <rect x="80" y="68" width="16" height="4" fill="black"/>
-
-                      <rect x="0" y="72" width="4" height="4" fill="black"/>
-                      <rect x="12" y="72" width="8" height="4" fill="black"/>
-                      <rect x="32" y="72" width="8" height="4" fill="black"/>
-                      <rect x="52" y="72" width="4" height="4" fill="black"/>
-                      <rect x="60" y="72" width="12" height="4" fill="black"/>
-                      <rect x="80" y="72" width="4" height="4" fill="black"/>
-                      <rect x="88" y="72" width="8" height="4" fill="black"/>
-
-                      <rect x="0" y="76" width="16" height="4" fill="black"/>
-                      <rect x="24" y="76" width="4" height="4" fill="black"/>
-                      <rect x="32" y="76" width="4" height="4" fill="black"/>
-                      <rect x="40" y="76" width="12" height="4" fill="black"/>
-                      <rect x="56" y="76" width="8" height="4" fill="black"/>
-                      <rect x="68" y="76" width="4" height="4" fill="black"/>
-                      <rect x="76" y="76" width="8" height="4" fill="black"/>
-                      <rect x="88" y="76" width="8" height="4" fill="black"/>
-
-                      <rect x="0" y="80" width="20" height="20" fill="black"/>
-                      <rect x="24" y="80" width="4" height="4" fill="black"/>
-                      <rect x="32" y="80" width="8" height="16" fill="black"/>
-                      <rect x="44" y="80" width="12" height="4" fill="black"/>
-                      <rect x="60" y="80" width="8" height="4" fill="black"/>
-                      <rect x="72" y="80" width="4" height="4" fill="black"/>
-                      <rect x="80" y="80" width="20" height="20" fill="black"/>
-
-                      <rect x="4" y="84" width="12" height="12" fill="white"/>
-                      <rect x="84" y="84" width="12" height="12" fill="white"/>
-                      <rect x="8" y="88" width="4" height="4" fill="black"/>
-                      <rect x="88" y="88" width="4" height="4" fill="black"/>
-
-                      <rect x="24" y="84" width="4" height="12" fill="black"/>
-                      <rect x="44" y="84" width="4" height="4" fill="black"/>
-                      <rect x="52" y="84" width="4" height="12" fill="black"/>
-                      <rect x="60" y="84" width="8" height="4" fill="black"/>
-                      <rect x="72" y="84" width="4" height="12" fill="black"/>
-
-                      <rect x="44" y="88" width="4" height="8" fill="black"/>
-                      <rect x="60" y="88" width="8" height="8" fill="black"/>
-
-                      <rect x="24" y="96" width="4" height="4" fill="black"/>
-                      <rect x="44" y="96" width="4" height="4" fill="black"/>
-                      <rect x="60" y="96" width="8" height="4" fill="black"/>
-                    </svg>
+                    <img src={qrCode} alt="Scan to download E-Abono app" className="w-full h-full object-contain" />
                   </div>
                 </div>
               </div>
