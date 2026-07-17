@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+import nodemailer from 'nodemailer';
 
 // NOTE on rate limiting: this in-memory Map resets whenever Vercel spins up
 // a fresh serverless instance (cold start), so it's a soft/best-effort limit
@@ -209,7 +209,7 @@ function buildEmailHtml({ name, email, comment }) {
   `;
 }
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Method not allowed.' });
@@ -262,4 +262,4 @@ module.exports = async function handler(req, res) {
     console.error('Email send error:', error);
     return res.status(500).json({ error: 'Failed to send message. Please try again later.' });
   }
-};
+}
