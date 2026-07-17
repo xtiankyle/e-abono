@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
@@ -93,6 +94,16 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Logo is referenced as a normal hosted image URL (raw GitHub link) instead
+// of a CID attachment. CID attachments render inline correctly, but Gmail
+// still lists them as an attached file in the message header. Using a plain
+// hosted <img src="https://..."> avoids that entirely, since there's no
+// attachment data being sent with the email at all.
+//
+// TODO: once deployed to Vercel, swap this for your production URL, e.g.
+// 'https://e-abono.vercel.app/logo.png', for a more reliable long-term host.
+const LOGO_URL = 'https://raw.githubusercontent.com/xtiankyle/e-abono/main/src/contact-backend/LOGO.png';
+
 function buildEmailHtml({ name, email, comment }) {
   const safeName    = escapeHtml(name);
   const safeEmail   = escapeHtml(email);
@@ -133,7 +144,7 @@ function buildEmailHtml({ name, email, comment }) {
                   <tr>
                     <td align="center">
                       <h1 style="margin:16px 0 0; color:#ffffff; font-size:25px; font-weight:700; letter-spacing:0.2px;">E-Abono</h1>
-                      <img src="https://i.ibb.co/Tx1FSS61/dfd6e943-ce92-453d-831b-b9051d0bf375.jpg" alt="E-Abono Logo" width="64" height="64" style="display:block; margin:12px auto 0; border:0;" />
+                      <img src="${LOGO_URL}" alt="E-Abono Logo" width="64" height="64" style="display:block; margin:12px auto 0; border:0;" />
                       <p style="margin:12px 0 0; color:rgba(255,255,255,0.78); font-size:12px; letter-spacing:0.8px; text-transform:uppercase;">Precision agriculture &middot; Benguet</p>
                     </td>
                   </tr>
