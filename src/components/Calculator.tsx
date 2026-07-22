@@ -6,19 +6,28 @@ import { Footer } from './Footer';
 interface FormData {
   cropType: string;
   targetYield: string;
-  landArea: string;
+  landArea: string; // entered in square meters
 }
 
-//  Cabbage High = 250 ton/ha, Normal = 140 ton/ha;
-//  Potato High = 210 ton/ha, Normal = 140 ton/ha)
+interface ResultData {
+  nitrogenNeededKg: number;
+  ratePerHectareKg: number;
+  landAreaNum: number;
+  cropLabel: string;
+  targetLabel: string;
+}
+
+//  Source rates: Cabbage High = 250 ton/ha, Normal = 140 ton/ha;
+//                Potato High = 210 ton/ha, Normal = 140 ton/ha
+//  Stored directly in kg/ha (ton/ha x 1000) so no conversion is needed later.
 const RATE_TABLE: Record<string, Record<string, number>> = {
   cabbage: {
-    high: 250,
-    normal: 140,
+    high: 250000,
+    normal: 140000,
   },
   potato: {
-    high: 210,
-    normal: 140,
+    high: 210000,
+    normal: 140000,
   },
 };
 
@@ -32,6 +41,7 @@ export const Calculator = () => {
   });
 
   const [showResults, setShowResults] = useState(false);
+  const [results, setResults] = useState<ResultData | null>(null);
   const [error, setError] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -56,23 +66,21 @@ export const Calculator = () => {
       return;
     }
 
+    //  rate is stored in kg/ha
+    const ratePerHectareKg = RATE_TABLE[formData.cropType]?.[formData.targetYield] ?? 0;
+
+    //  scale to the user's land area (land area in m2 / 10,000 m2 per hectare)
+    const hectareFraction = landAreaNum / HECTARE_IN_SQM;
+    const nitrogenNeededKg = ratePerHectareKg * hectareFraction;
+
+    const cropLabel = formData.cropType === 'cabbage' ? 'Cabbage' : formData.cropType === 'potato' ? 'Potato' : '';
+    const targetLabel = formData.targetYield === 'high' ? 'High' : formData.targetYield === 'normal' ? 'Normal' : '';
+
+    setResults({ nitrogenNeededKg, ratePerHectareKg, landAreaNum, cropLabel, targetLabel });
     setError('');
     setShowResults(true);
   };
 
-  //  rate in ton/ha -> convert to kg/ha (x1000)
-  const ratePerHectareTon = formData.cropType && formData.targetYield
-    ? RATE_TABLE[formData.cropType]?.[formData.targetYield] ?? 0
-    : 0;
-  const ratePerHectareKg = ratePerHectareTon * 1000;
-
-  //  scale to the user's land area (land area in m2 / 10,000 m2 per hectare)
-  const landAreaNum = parseFloat(formData.landArea) || 0;
-  const hectareFraction = landAreaNum / HECTARE_IN_SQM;
-  const nitrogenNeededKg = ratePerHectareKg * hectareFraction;
-
-  const cropLabel = formData.cropType === 'cabbage' ? 'Cabbage' : formData.cropType === 'potato' ? 'Potato' : '';
-  const targetLabel = formData.targetYield === 'high' ? 'High' : formData.targetYield === 'normal' ? 'Normal' : '';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -169,112 +177,61 @@ export const Calculator = () => {
                     <p className="text-xs text-gray-400">1 hectare = 10,000 m²</p>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white rounded-2xl shadow-xl p-6">
-              <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-                <span className="text-red-500">*</span> All fields are required
-              </p>
-              <button
-                onClick={handleCalculate}
-                className="bg-eabono-gold text-white w-full sm:w-auto px-8 md:px-10 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg hover:bg-eabono-gold/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-3"
-              >
-                Calculate
-                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </button>
-            </div>
+                <button
+                  onClick={handleCalculate}
+                  className="w-full bg-eabono-gold text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-eabono-gold/90 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] flex items-center justify-center gap-3"
+                >
+                  Calculate
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </button>
 
-            {error && (
-              <div className="mt-4 bg-red-50 border-2 border-red-200 text-red-600 rounded-xl p-4 text-center font-medium">
-                {error}
-              </div>
-            )}
-          </div>
-        </section>
+                <p className="text-xs sm:text-sm text-gray-500 text-center">
+                  <span className="text-red-500">*</span> All fields are required
+                </p>
 
-        {showResults && (
-          <section className="py-16">
-            <div className="container mx-auto px-6 max-w-5xl">
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-bold text-eabono-green mb-4">
-                  Calculated Results
-                </h2>
-                <div className="w-24 h-1 bg-eabono-gold mx-auto"></div>
-              </div>
-
-              <div className="space-y-8">
-                {/* Main result card */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-eabono-green to-eabono-green-light p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-white text-xl font-bold">Nitrogen Requirement</h3>
-                    </div>
+                {error && (
+                  <div className="bg-red-50 border-2 border-red-200 text-red-600 rounded-xl p-4 text-center font-medium">
+                    {error}
                   </div>
-                  <div className="p-10 bg-gradient-to-br from-gray-50 to-gray-100">
-                    <div className="text-center mb-8">
+                )}
+
+                {showResults && results && (
+                  <div className="pt-4 border-t-2 border-gray-100 space-y-6">
+                    <div className="text-center">
                       <p className="text-gray-500 text-sm font-medium mb-2">Total Nitrogen Needed</p>
                       <p className="text-5xl md:text-6xl font-bold text-eabono-green">
-                        {nitrogenNeededKg.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                        {results.nitrogenNeededKg.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                         <span className="text-2xl md:text-3xl text-gray-400 ml-2">kg</span>
                       </p>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="bg-white rounded-xl p-4 text-center shadow-sm">
+                      <div className="bg-gray-50 rounded-xl p-4 text-center">
                         <p className="text-xs text-gray-400 font-medium mb-1">Crop</p>
-                        <p className="text-gray-800 font-bold">{cropLabel}</p>
+                        <p className="text-gray-800 font-bold">{results.cropLabel}</p>
                       </div>
-                      <div className="bg-white rounded-xl p-4 text-center shadow-sm">
+                      <div className="bg-gray-50 rounded-xl p-4 text-center">
                         <p className="text-xs text-gray-400 font-medium mb-1">Target</p>
-                        <p className="text-gray-800 font-bold">{targetLabel}</p>
+                        <p className="text-gray-800 font-bold">{results.targetLabel}</p>
                       </div>
-                      <div className="bg-white rounded-xl p-4 text-center shadow-sm">
+                      <div className="bg-gray-50 rounded-xl p-4 text-center">
                         <p className="text-xs text-gray-400 font-medium mb-1">Land Area</p>
-                        <p className="text-gray-800 font-bold">{landAreaNum.toLocaleString()} m²</p>
+                        <p className="text-gray-800 font-bold">{results.landAreaNum.toLocaleString()} m²</p>
                       </div>
-                      <div className="bg-white rounded-xl p-4 text-center shadow-sm">
+                      <div className="bg-gray-50 rounded-xl p-4 text-center">
                         <p className="text-xs text-gray-400 font-medium mb-1">Rate Used</p>
-                        <p className="text-gray-800 font-bold">{ratePerHectareTon} ton/ha</p>
+                        <p className="text-gray-800 font-bold">{results.ratePerHectareKg.toLocaleString()} kg/ha</p>
                       </div>
                     </div>
                   </div>
-                </div>
-
-                {/* Data Visualization card */}
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-eabono-green to-eabono-green-light p-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
-                        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-white text-xl font-bold">Data Visualization</h3>
-                    </div>
-                  </div>
-                  <div className="p-12 flex items-center justify-center min-h-[400px] bg-gradient-to-br from-gray-50 to-gray-100">
-                    <div className="text-center">
-                      <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      <p className="text-gray-400 text-xl font-semibold">Graphs and Charts</p>
-                      <p className="text-gray-400 text-sm mt-2">Visual representation of nitrogen requirements</p>
-                    </div>
-                  </div>
-                </div>
-
+                )}
               </div>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         <AppDownload />
       </main>
